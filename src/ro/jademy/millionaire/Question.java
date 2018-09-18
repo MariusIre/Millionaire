@@ -6,9 +6,10 @@ import java.util.List;
 public class Question {
     public static final int MAX_LEVEL = 15;
 
-    public String question;
+    public String questionSentence;
     public int difficultyLevel; //max 15
     public List<Answer> answerList = new ArrayList<>();
+    public boolean hasBeenAsked;
 
     public Answer getCorrectAnswer() {
         for (Answer answer : answerList) {

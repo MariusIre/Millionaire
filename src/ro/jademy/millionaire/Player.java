@@ -1,11 +1,14 @@
 package ro.jademy.millionaire;
 
 public class Player {
-    String firstName;
-    String lastName;
+    String username;
+    String password;
 
-    Player (String firstName, String lastName){
-        this.firstName = firstName;
-        this.lastName = lastName;
+    Player() {
+    }
+
+    Player (String username, String password){
+        this.username = username;
+        this.password = password;
     }
 }

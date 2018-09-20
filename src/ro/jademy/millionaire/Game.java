@@ -59,10 +59,12 @@ public class Game {
         System.out.println("Your answer is?");
         String answerSentence = scan.nextLine();
         for (Answer answerToFind : question.answerList) {
-            if (answerToFind.answerSentence.equalsIgnoreCase(answerSentence)) {
-                System.out.println("The answer is correct.");
-                currentLevel++;
-                return true;
+            if (answerSentence.equalsIgnoreCase(answerToFind.answerSentence)) {
+                if (answerToFind.isCorrect) {
+                    System.out.println("The answer is correct.");
+                    currentLevel++;
+                    return true;
+                }
             }
         }
         return false;

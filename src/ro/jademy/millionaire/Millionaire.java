@@ -3,7 +3,7 @@ package ro.jademy.millionaire;
 public class Millionaire {
     public static void main(String[] args) {
 
-        Game game = lauchGame();
+        Game game = launchGame();
         game.mainMenu();
         do {
             Question question = game.setQuestion();
@@ -13,7 +13,7 @@ public class Millionaire {
         game.endMenu();
     }
 
-    static Game lauchGame() {
+    static Game launchGame() {
         Question question = new Question();
         question.difficultyLevel = 1;
         question.questionSentence = "This is a test dif1v1?";
@@ -57,6 +57,9 @@ public class Millionaire {
         Game game = new Game();
         game.gameQuestions.add(question);
         game.gameQuestions.add(question1);
+        game.gameQuestions.add(question2);
+        game.gameQuestions.add(question3);
+        game.gameQuestions.add(question4);
 
         return game;
     }

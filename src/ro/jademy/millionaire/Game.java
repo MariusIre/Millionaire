@@ -6,16 +6,13 @@ import java.util.Scanner;
 
 public class Game {
 
-    private boolean gameNotOver = true;
-    private ArrayList<Question> gameQuestionsLv1 = new ArrayList<>();
-    private ArrayList<Question> gameQuestionsLv2 = new ArrayList<>();
-    private ArrayList<Question> gameQuestionsLv3 = new ArrayList<>();
-    private ArrayList<Question> gameQuestionsLv4 = new ArrayList<>();
-    private ArrayList<Question> gameQuestionsLv5 = new ArrayList<>();
+    private static final int MAX_LEVEL = 3;
+    private boolean gameOver = false;
+    private ArrayList<Question> gameQuestions = new ArrayList<>();
     private ArrayList<Question> gameQuestionsInUse = new ArrayList<>();
     private ArrayList<Player> players = new ArrayList<>();
     private int currentLevel = 1;
-    private static final int MAX_LEVEL = 3;
+    private int fiftyFiftyTries = 2;
 
     private Scanner scan = new Scanner(System.in);
     private Random rand = new Random();
@@ -23,60 +20,65 @@ public class Game {
     public Game() {
         // add questions to game
         ArrayList<Answer> answersQuestionLv1x0 = new ArrayList<>();
-        answersQuestionLv1x0.add(new WrongAnswer("Answer1 v1.0"));
-        answersQuestionLv1x0.add(new WrongAnswer("Answer2 v1.0"));
-        answersQuestionLv1x0.add(new WrongAnswer("Answer3 v1.0"));
-        answersQuestionLv1x0.add(new CorrectAnswer("Answer4 v1.0"));
-        Question questionLv1x0 = new Question("Question v1.0?", 1, answersQuestionLv1x0);
+        answersQuestionLv1x0.add(new WrongAnswer("Mont Blanc"));
+        answersQuestionLv1x0.add(new WrongAnswer("Aconcagua"));
+        answersQuestionLv1x0.add(new WrongAnswer("Kilimanjaro"));
+        answersQuestionLv1x0.add(new CorrectAnswer("Chomolungma"));
+        Question questionLv1x0 = new Question("Which is the tallest mountain on earth?", 1, answersQuestionLv1x0);
 
         ArrayList<Answer> answersQuestionLv1x1 = new ArrayList<>();
-        answersQuestionLv1x1.add(new WrongAnswer("Answer1 v1.1"));
-        answersQuestionLv1x1.add(new WrongAnswer("Answer2 v1.1"));
-        answersQuestionLv1x1.add(new WrongAnswer("Answer3 v1.1"));
-        answersQuestionLv1x1.add(new CorrectAnswer("Answer4 v1.1"));
-        Question questionLv1x1 = new Question("Question v1.1?", 1, answersQuestionLv1x1);
+        answersQuestionLv1x1.add(new WrongAnswer("Is over 9000!"));
+        answersQuestionLv1x1.add(new WrongAnswer("10000m"));
+        answersQuestionLv1x1.add(new WrongAnswer("8148m"));
+        answersQuestionLv1x1.add(new CorrectAnswer("8848m"));
+        Question questionLv1x1 = new Question("how high is the mountain Everest?", 1, answersQuestionLv1x1);
 
         ArrayList<Answer> answersQuestionLv2x0 = new ArrayList<>();
-        answersQuestionLv2x0.add(new WrongAnswer("Answer1 v2.0"));
-        answersQuestionLv2x0.add(new WrongAnswer("Answer2 v2.0"));
-        answersQuestionLv2x0.add(new WrongAnswer("Answer3 v2.0"));
-        answersQuestionLv2x0.add(new CorrectAnswer("Answer4 v2.0"));
-        Question questionLv2x0 = new Question("Question v2.0?", 2, answersQuestionLv2x0);
+        answersQuestionLv2x0.add(new WrongAnswer("Stephen King"));
+        answersQuestionLv2x0.add(new WrongAnswer("Clive Staples Lewis"));
+        answersQuestionLv2x0.add(new WrongAnswer("Arthur Conan Doyle"));
+        answersQuestionLv2x0.add(new CorrectAnswer("J. K. Rowling"));
+        Question questionLv2x0 = new Question("Who wrote Harry Potter?", 2, answersQuestionLv2x0);
 
         ArrayList<Answer> answersQuestionLv2x1 = new ArrayList<>();
-        answersQuestionLv2x1.add(new WrongAnswer("Answer1 v2.1"));
-        answersQuestionLv2x1.add(new WrongAnswer("Answer2 v2.1"));
-        answersQuestionLv2x1.add(new WrongAnswer("Answer3 v2.1"));
-        answersQuestionLv2x1.add(new CorrectAnswer("Answer4 v2.1"));
-        Question questionLv2x1 = new Question("Question v2.1?", 2, answersQuestionLv2x1);
+        answersQuestionLv2x1.add(new WrongAnswer("J. K. Rowling"));
+        answersQuestionLv2x1.add(new WrongAnswer("Stephen King"));
+        answersQuestionLv2x1.add(new WrongAnswer("Arthur Conan Doyle"));
+        answersQuestionLv2x1.add(new CorrectAnswer("Clive Staples Lewis"));
+        Question questionLv2x1 = new Question("Who wrote Chronicles of Narnia?", 2, answersQuestionLv2x1);
 
         ArrayList<Answer> answersQuestionLv3x0 = new ArrayList<>();
-        answersQuestionLv3x0.add(new WrongAnswer("Answer1 v3.0"));
-        answersQuestionLv3x0.add(new WrongAnswer("Answer2 v3.0"));
-        answersQuestionLv3x0.add(new WrongAnswer("Answer3 v3.0"));
-        answersQuestionLv3x0.add(new CorrectAnswer("Answer4 v3.0"));
-        Question questionLv3x0 = new Question("Question v3.0?", 3, answersQuestionLv3x0);
+        answersQuestionLv3x0.add(new WrongAnswer("14014m"));
+        answersQuestionLv3x0.add(new WrongAnswer("10000m"));
+        answersQuestionLv3x0.add(new WrongAnswer("8848m"));
+        answersQuestionLv3x0.add(new CorrectAnswer("10,994m"));
+        Question questionLv3x0 = new Question("How deep is Marianas Trench?", 3, answersQuestionLv3x0);
 
         ArrayList<Answer> answersQuestionLv3x1 = new ArrayList<>();
-        answersQuestionLv3x1.add(new WrongAnswer("Answer1 v3.1"));
-        answersQuestionLv3x1.add(new WrongAnswer("Answer2 v3.1"));
-        answersQuestionLv3x1.add(new WrongAnswer("Answer3 v3.1"));
-        answersQuestionLv3x1.add(new CorrectAnswer("Answer4 v3.1"));
-        Question questionLv3x1 = new Question("Question v3.1?", 3, answersQuestionLv3x1);
+        answersQuestionLv3x1.add(new WrongAnswer("HMRG Deep"));
+        answersQuestionLv3x1.add(new WrongAnswer("Challenger II"));
+        answersQuestionLv3x1.add(new WrongAnswer("Mariana Hollow"));
+        answersQuestionLv3x1.add(new CorrectAnswer("Challenger Deep"));
+        Question questionLv3x1 = new Question("How the deepest point in Marianas Trench is called?", 3, answersQuestionLv3x1);
 
-        ArrayList<Question> questionsLv1 = new ArrayList<>();
-        ArrayList<Question> questionsLv2 = new ArrayList<>();
-        ArrayList<Question> questionsLv3 = new ArrayList<>();
-        questionsLv1.add(questionLv1x0);
-        questionsLv1.add(questionLv1x1);
-        questionsLv2.add(questionLv2x0);
-        questionsLv2.add(questionLv2x1);
-        questionsLv3.add(questionLv3x0);
-        questionsLv3.add(questionLv3x1);
+        this.gameQuestions.add(questionLv1x0);
+        this.gameQuestions.add(questionLv1x1);
+        this.gameQuestions.add(questionLv2x0);
+        this.gameQuestions.add(questionLv2x1);
+        this.gameQuestions.add(questionLv3x0);
+        this.gameQuestions.add(questionLv3x1);
+    }
 
-        this.gameQuestionsLv1.addAll(questionsLv1);
-        this.gameQuestionsLv2.addAll(questionsLv2);
-        this.gameQuestionsLv3.addAll(questionsLv3);
+    public boolean getGameOver() {
+        return gameOver;
+    }
+
+    public void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
+    }
+
+    public ArrayList<Question> getGameQuestionsInUse() {
+        return gameQuestionsInUse;
     }
 
     public void mainMenu() {
@@ -91,44 +93,39 @@ public class Game {
     }
 
     public void setQuestionsForLevels() {
-        for (int i = 1; i < MAX_LEVEL; i++) {
-
+        for (int i = 1; i <= MAX_LEVEL; i++) {
+            ArrayList<Question> gameQuestionsPerLevel = getQuestionsPerLevel(i);
+            gameQuestionsInUse.add(getRandomQuestionFromArray(gameQuestionsPerLevel));
         }
     }
 
-    public void showQuestion(Question question) {
-        String answerMark = "ABCDEF";
-        System.out.println(question);
-        for(Answer Answer : question.getAnswerList()) {
-        }
-    }
-
-    public boolean answerQuestion(Question question) {
-        //get user input and check if corret
-        System.out.println("Your answer is?");
-        String answerSentence = scan.nextLine();
-        for (Answer answerToFind : question.getAnswerList()) {
-            if (answerSentence.equalsIgnoreCase(answerToFind.getAnswerSentence())) {
-                if (answerToFind.isCorrect()) {
-                    System.out.println("The answer is correct.");
-                    currentLevel++;
-                    return true;
-                }
+    private ArrayList<Question> getQuestionsPerLevel(int difficulty) {
+        ArrayList<Question> questionsPerLevel = new ArrayList<>();
+        for (Question question : gameQuestions) {
+            if (question.getDifficultyLevel() == difficulty) {
+                questionsPerLevel.add(question);
             }
+        }
+        return questionsPerLevel;
+    }
+
+    private Question getRandomQuestionFromArray(ArrayList<Question> gameQuestions) {
+        return gameQuestions.get(rand.nextInt(gameQuestions.size()));
+    }
+
+    public boolean askForFiftyFifty () {
+        System.out.println("Fifty fifty tries remaining: " + fiftyFiftyTries);
+        System.out.println("Do you want to use fifty fifty on this question?(Y/N)");
+        String answer = scan.nextLine();
+        if (answer.equalsIgnoreCase("y")){
+            fiftyFiftyTries--;
+            return true;
         }
         return false;
     }
 
-    public boolean showGameOver(boolean gameStatus) {
-        if (gameStatus) {
-            if (!askForWithdraw()) {
-                System.out.println("YOU WON THE PRIZE FOR LEVEL " + currentLevel);
-                return false;
-            }
-        } else {
-            System.out.println("YOU LOSE");
-        }
-        return gameStatus;
+    public int getFiftyFiftyTries () {
+        return fiftyFiftyTries;
     }
 
     public boolean askForWithdraw() {
@@ -137,16 +134,22 @@ public class Game {
         return answer.equalsIgnoreCase("y");
     }
 
-    public void endMenu() {
+    public boolean endMenu() {
+        gameQuestionsInUse.clear();
+        fiftyFiftyTries = 2;
         System.out.println("N - new game / Q - quit");
-        String answer = scan.nextLine();
-        if (answer.equalsIgnoreCase("y")) {
-            mainMenu();
-        }
+        boolean goodAnswer = false;
+        do {
+            String answer = scan.nextLine();
+            switch (answer) {
+                case "N" :
+                    return true;
+                case "Q" :
+                    return false;
+                default :
+                    System.out.println("Incorrect input please use N or Q to choose.");
+            }
+        } while (!goodAnswer);
+        return true;
     }
-
-    public void fiftyFifty() {
-        //show the same question but with only 2 possible answers
-    }
-
 }

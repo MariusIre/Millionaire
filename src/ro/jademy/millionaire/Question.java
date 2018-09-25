@@ -26,16 +26,16 @@ public class Question {
 
     void showQuestionAndAnswers() {
         String answerMark = "ABCD";
-        System.out.println(questionSentence);
+        System.out.println("\n" + questionSentence + "\n");
         for (int i = 0; i <= 3; i++) {
             System.out.println(answerMark.charAt(i) + " " + answerList.get(i));
         }
+        System.out.println();
     }
 
     boolean answerQuestion() {
-        //get user input and check if corret
         Scanner scan = new Scanner(System.in);
-        System.out.println("Your answer is?");
+        System.out.println("Your answer to the question is?");
         String answerSentence = scan.nextLine();
         if (answerQuestionByMark(answerSentence) || answerQuestionBySentence(answerSentence)) {
             System.out.println("The answer is correct.");
@@ -83,7 +83,6 @@ public class Question {
             randomInt = rand.nextInt(answerList.size());
             if (!answerList.get(randomInt).isCorrect() &&
                     !answerList.get(randomInt).toString().equalsIgnoreCase("")) {
-                System.out.println(answerList.get(randomInt));
                 answerList.get(randomInt).setAnswerSentence("");
                 numberOfChangedAnswers++;
             }

@@ -11,10 +11,10 @@ public abstract class Answer {
         this.answerSentence = answerSentence;
     }
 
+    abstract boolean isCorrect ();
+
     @Override
     public String toString () {
         return answerSentence;
     }
-
-    abstract boolean isCorrect ();
 }

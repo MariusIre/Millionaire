@@ -1,5 +1,6 @@
 package ro.jademy.millionaire;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -147,11 +148,12 @@ public class Game {
         setGameQuestions();
     }
 
-    private void playGame() {
+    private void playGame() throws IOException, InterruptedException {
         gameReset();
         setQuestionsForLevels();
         for (Question question : gameQuestionsInUse) {
             Collections.shuffle(question.getAnswerList());
+            clearCmd();
             System.out.println("Game current level is: " + currentLevel);
             question.showQuestionAndAnswers();
             if (fiftyFiftyTries > 0) {
@@ -176,12 +178,16 @@ public class Game {
         }
     }
 
-    void runGame() {
+    void runGame() throws IOException, InterruptedException {
         boolean gameOn;
         mainMenu();
         do {
             playGame();
             gameOn = endMenu();
         } while (gameOn);
+    }
+
+    private static void clearCmd() throws IOException, InterruptedException {
+        new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
     }
 }

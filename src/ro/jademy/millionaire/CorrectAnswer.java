@@ -2,7 +2,7 @@ package ro.jademy.millionaire;
 
 public class CorrectAnswer extends Answer {
 
-    public CorrectAnswer(String answerSentence) {
+    CorrectAnswer(String answerSentence) {
         super(answerSentence);
     }
 

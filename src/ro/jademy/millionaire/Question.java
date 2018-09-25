@@ -24,28 +24,22 @@ public class Question {
         return answerList;
     }
 
-    public void showQuestion() {
-        String answerMark = "ABCDEF";
-        int answerMarkIndex = 0;
+    void showQuestionAndAnswers() {
+        String answerMark = "ABCD";
         System.out.println(questionSentence);
-        for (Answer answer : answerList) {
-            System.out.println(answerMark.charAt(answerMarkIndex) + " " + answer + ".");
-            answerMarkIndex++;
+        for (int i = 0; i <= 3; i++) {
+            System.out.println(answerMark.charAt(i) + " " + answerList.get(i));
         }
     }
 
-    public boolean answerQuestion() {
+    boolean answerQuestion() {
         //get user input and check if corret
         Scanner scan = new Scanner(System.in);
         System.out.println("Your answer is?");
         String answerSentence = scan.nextLine();
-        for (Answer answerToFind : answerList) {
-            if (answerSentence.equalsIgnoreCase(answerToFind.toString())) {
-                if (answerToFind.isCorrect()) {
-                    System.out.println("The answer is correct.");
-                    return false;
-                }
-            }
+        if (answerQuestionByMark(answerSentence) || answerQuestionBySentence(answerSentence)) {
+            System.out.println("The answer is correct.");
+            return false;
         }
         System.out.println("You lost!");
         return true;
@@ -55,26 +49,46 @@ public class Question {
         for (Answer answerToFind : answerList) {
             if (answerSentence.equalsIgnoreCase(answerToFind.toString())) {
                 if (answerToFind.isCorrect()) {
-                    System.out.println("The answer is correct.");
-                    return false;
+                    return true;
                 }
             }
         }
-        return true;
-    }  //not in use yet, needs adjustment
+        return false;
+    }
 
-    private void answerQuestionByMark () {} //not in use yet, needs adjustment
+    private boolean answerQuestionByMark(String answerMark) {
+        switch (answerMark) {
+            case "A":
+            case "a":
+                return answerList.get(0).isCorrect();
+            case "B":
+            case "b":
+                return answerList.get(1).isCorrect();
+            case "C":
+            case "c":
+                return answerList.get(2).isCorrect();
+            case "D":
+            case "d":
+                return answerList.get(3).isCorrect();
+            default:
+                return false;
+        }
+    }
 
-    public void fiftyFifty() {
+    void fiftyFifty() {
         Random rand = new Random();
-        ArrayList<Answer> answerListFiftyFifty = this.answerList;
+        int randomInt;
+        int numberOfChangedAnswers = 0;
         do {
-            Answer answer = answerListFiftyFifty.get(rand.nextInt(answerListFiftyFifty.size()));
-            if (!answer.isCorrect()) {
-                answerListFiftyFifty.remove(answer);
+            randomInt = rand.nextInt(answerList.size());
+            if (!answerList.get(randomInt).isCorrect() &&
+                    !answerList.get(randomInt).toString().equalsIgnoreCase("")) {
+                System.out.println(answerList.get(randomInt));
+                answerList.get(randomInt).setAnswerSentence("");
+                numberOfChangedAnswers++;
             }
-        } while (answerListFiftyFifty.size() > 2);
-        showQuestion();
+        } while (numberOfChangedAnswers < 2);
+        showQuestionAndAnswers();
     }
 
     @Override

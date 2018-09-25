@@ -1,6 +1,7 @@
 package ro.jademy.millionaire;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -17,7 +18,7 @@ public class Game {
     private Scanner scan = new Scanner(System.in);
     private Random rand = new Random();
 
-    public Game() {
+    private void setGameQuestions() {
         // add questions to game
         ArrayList<Answer> answersQuestionLv1x0 = new ArrayList<>();
         answersQuestionLv1x0.add(new WrongAnswer("Mont Blanc"));
@@ -31,7 +32,7 @@ public class Game {
         answersQuestionLv1x1.add(new WrongAnswer("10000m"));
         answersQuestionLv1x1.add(new WrongAnswer("8148m"));
         answersQuestionLv1x1.add(new CorrectAnswer("8848m"));
-        Question questionLv1x1 = new Question("how high is the mountain Everest?", 1, answersQuestionLv1x1);
+        Question questionLv1x1 = new Question("How high is the mountain Everest?", 1, answersQuestionLv1x1);
 
         ArrayList<Answer> answersQuestionLv2x0 = new ArrayList<>();
         answersQuestionLv2x0.add(new WrongAnswer("Stephen King"));
@@ -51,7 +52,7 @@ public class Game {
         answersQuestionLv3x0.add(new WrongAnswer("14014m"));
         answersQuestionLv3x0.add(new WrongAnswer("10000m"));
         answersQuestionLv3x0.add(new WrongAnswer("8848m"));
-        answersQuestionLv3x0.add(new CorrectAnswer("10,994m"));
+        answersQuestionLv3x0.add(new CorrectAnswer("10994m"));
         Question questionLv3x0 = new Question("How deep is Marianas Trench?", 3, answersQuestionLv3x0);
 
         ArrayList<Answer> answersQuestionLv3x1 = new ArrayList<>();
@@ -69,20 +70,7 @@ public class Game {
         this.gameQuestions.add(questionLv3x1);
     }
 
-    public boolean getGameOver() {
-        return gameOver;
-    }
-
-    public void setGameOver(boolean gameOver) {
-        this.gameOver = gameOver;
-    }
-
-    public ArrayList<Question> getGameQuestionsInUse() {
-        return gameQuestionsInUse;
-    }
-
-    public void mainMenu() {
-        //initializam intrebarile si jocul
+    private void mainMenu() {
         System.out.println("$$$ WHO WANTS TO BE A MILLIONAIRE $$$");
         System.out.println("Enter your username:");
         String username = scan.nextLine();
@@ -92,10 +80,10 @@ public class Game {
         players.add(player);
     }
 
-    public void setQuestionsForLevels() {
+    private void setQuestionsForLevels() {
         for (int i = 1; i <= MAX_LEVEL; i++) {
             ArrayList<Question> gameQuestionsPerLevel = getQuestionsPerLevel(i);
-            gameQuestionsInUse.add(getRandomQuestionFromArray(gameQuestionsPerLevel));
+            gameQuestionsInUse.add(gameQuestionsPerLevel.get(rand.nextInt(gameQuestionsPerLevel.size())));
         }
     }
 
@@ -109,47 +97,91 @@ public class Game {
         return questionsPerLevel;
     }
 
-    private Question getRandomQuestionFromArray(ArrayList<Question> gameQuestions) {
-        return gameQuestions.get(rand.nextInt(gameQuestions.size()));
-    }
-
-    public boolean askForFiftyFifty () {
+    private boolean askForFiftyFifty() {
         System.out.println("Fifty fifty tries remaining: " + fiftyFiftyTries);
         System.out.println("Do you want to use fifty fifty on this question?(Y/N)");
-        String answer = scan.nextLine();
-        if (answer.equalsIgnoreCase("y")){
+        if (getAnswerFromUser()) {
             fiftyFiftyTries--;
             return true;
         }
         return false;
     }
 
-    public int getFiftyFiftyTries () {
-        return fiftyFiftyTries;
-    }
-
-    public boolean askForWithdraw() {
+    private boolean askForWithdraw() {
         System.out.println("Do you wish to continue? (Y/N)");
-        String answer = scan.nextLine();
-        return answer.equalsIgnoreCase("y");
+        if (!getAnswerFromUser()) {
+            System.out.println("Congratulations you won the prize for level: " + currentLevel);
+            return false;
+        }
+        return true;
     }
 
-    public boolean endMenu() {
-        gameQuestionsInUse.clear();
-        fiftyFiftyTries = 2;
-        System.out.println("N - new game / Q - quit");
+    private boolean endMenu() {
+        System.out.println("Y - new game / N - quit");
+        return getAnswerFromUser();
+    }
+
+    private boolean getAnswerFromUser() {
         boolean goodAnswer = false;
         do {
             String answer = scan.nextLine();
             switch (answer) {
-                case "N" :
+                case "Y":
+                case "y":
                     return true;
-                case "Q" :
+                case "N":
+                case "n":
                     return false;
-                default :
-                    System.out.println("Incorrect input please use N or Q to choose.");
+                default:
+                    System.out.println("Incorrect input please use Y or N to choose.");
             }
         } while (!goodAnswer);
         return true;
+    }
+
+    private void gameReset() {
+        currentLevel = 1;
+        gameQuestionsInUse.clear();
+        gameQuestions.clear();
+        fiftyFiftyTries = 2;
+        setGameQuestions();
+    }
+
+    private void playGame() {
+        gameReset();
+        setQuestionsForLevels();
+        for (Question question : gameQuestionsInUse) {
+            Collections.shuffle(question.getAnswerList());
+            System.out.println("Game current level is: " + currentLevel);
+            question.showQuestionAndAnswers();
+            if (fiftyFiftyTries > 0) {
+                boolean tryFiftyFifty = askForFiftyFifty();
+                if (tryFiftyFifty) {
+                    question.fiftyFifty();
+                }
+            }
+            gameOver = question.answerQuestion();
+            if (gameOver) {
+                break;
+            }
+            if (currentLevel > MAX_LEVEL - 1) {
+                System.out.println("CONGRATULATIONS YOU WON THE BIG PRIZE!!!");
+                break;
+            }
+            gameOver = askForWithdraw();
+            if (!gameOver) {
+                break;
+            }
+            currentLevel++;
+        }
+    }
+
+    void runGame() {
+        boolean gameOn;
+        mainMenu();
+        do {
+            playGame();
+            gameOn = endMenu();
+        } while (gameOn);
     }
 }

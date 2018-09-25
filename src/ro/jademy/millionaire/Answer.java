@@ -7,6 +7,10 @@ public abstract class Answer {
         this.answerSentence = answerSentence;
     }
 
+    void setAnswerSentence(String answerSentence) {
+        this.answerSentence = answerSentence;
+    }
+
     @Override
     public String toString () {
         return answerSentence;

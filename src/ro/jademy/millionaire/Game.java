@@ -71,14 +71,52 @@ public class Game {
         this.gameQuestions.add(questionLv3x1);
     }
 
-    private void mainMenu() {
+    private boolean askGuest() {
         System.out.println("$$$ WHO WANTS TO BE A MILLIONAIRE $$$");
+        System.out.println("Y - PLAY GAME");
+        System.out.println("N - QUIT GAME");
+        if (getAnswerFromUser()) {
+            accountMenu();
+            return true;
+        }
+        return false;
+    }
+
+    private void accountMenu() {
+        System.out.println("Y - to create a new account.");
+        System.out.println("N - to login in an existing one.");
+        if (getAnswerFromUser()) {
+            players.add(getUserCredentials());
+            System.out.println("Account successfuly created.");
+        }
+        if (checkCredentials(getUserCredentials())) {
+            System.out.println("You succesfully logged in.");
+        } else {
+            System.out.println("Wrong account or password, Y - try again / N - return to main loby.");
+            if (!getAnswerFromUser()) {
+                askGuest();
+            }
+        }
+    }
+
+    private boolean checkCredentials(Player playerToLogIn) {
+        if (players.isEmpty()) {
+            players.add(new Player("", ""));
+        }
+        for (Player player : players) {
+            if (player.equals(playerToLogIn)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private Player getUserCredentials() {
         System.out.println("Enter your username:");
         String username = scan.nextLine();
         System.out.println("Enter your pasword:");
         String password = scan.nextLine();
-        Player player = new Player(username, password);
-        players.add(player);
+        return new Player(username, password);
     }
 
     private void setQuestionsForLevels() {
@@ -117,7 +155,7 @@ public class Game {
         return true;
     }
 
-    private boolean endMenu() {
+    private boolean askForNewGame() {
         System.out.println("Y - new game / N - quit");
         return getAnswerFromUser();
     }
@@ -179,12 +217,11 @@ public class Game {
     }
 
     void runGame() throws IOException, InterruptedException {
-        boolean gameOn;
-        mainMenu();
-        do {
+        boolean gameOn = askGuest();
+        while (gameOn) {
             playGame();
-            gameOn = endMenu();
-        } while (gameOn);
+            gameOn = askForNewGame();
+        }
     }
 
     private static void clearCmd() throws IOException, InterruptedException {

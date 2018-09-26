@@ -15,11 +15,12 @@ public class Game {
     private ArrayList<Player> players = new ArrayList<>();
     private int currentLevel = 1;
     private int fiftyFiftyTries = 2;
+    private Player playingUser;
 
     private Scanner scan = new Scanner(System.in);
     private Random rand = new Random();
 
-    private void setGameQuestions() {
+    private void createGameQuestions() {
         // add questions to game
         ArrayList<Answer> answersQuestionLv1x0 = new ArrayList<>();
         answersQuestionLv1x0.add(new WrongAnswer("Mont Blanc"));
@@ -71,7 +72,7 @@ public class Game {
         this.gameQuestions.add(questionLv3x1);
     }
 
-    private boolean askGuest() {
+    private boolean startMenuAndAskGuest() {
         System.out.println("$$$ WHO WANTS TO BE A MILLIONAIRE $$$");
         System.out.println("Y - PLAY GAME");
         System.out.println("N - QUIT GAME");
@@ -89,22 +90,29 @@ public class Game {
             players.add(getUserCredentials());
             System.out.println("Account successfuly created.");
         }
-        if (checkCredentials(getUserCredentials())) {
-            System.out.println("You succesfully logged in.");
+        userLogIn();
+    }
+
+    private void userLogIn() {
+        if (checkUserCredentials(getUserCredentials())) {
+            System.out.println(playingUser.getUsername() + " succesfully logged in.");
         } else {
             System.out.println("Wrong account or password, Y - try again / N - return to main loby.");
             if (!getAnswerFromUser()) {
-                askGuest();
+                startMenuAndAskGuest();
+            } else {
+                userLogIn();
             }
         }
     }
 
-    private boolean checkCredentials(Player playerToLogIn) {
+    private boolean checkUserCredentials(Player playerToLogIn) {
         if (players.isEmpty()) {
             players.add(new Player("", ""));
         }
         for (Player player : players) {
             if (player.equals(playerToLogIn)) {
+                playingUser = playerToLogIn;
                 return true;
             }
         }
@@ -183,12 +191,16 @@ public class Game {
         gameQuestionsInUse.clear();
         gameQuestions.clear();
         fiftyFiftyTries = 2;
-        setGameQuestions();
+        createGameQuestions();
     }
 
-    private void playGame() throws IOException, InterruptedException {
+    private void setNewGame() throws IOException, InterruptedException {
         gameReset();
         setQuestionsForLevels();
+        mainGameCourse();
+    }
+
+    private void mainGameCourse() throws IOException, InterruptedException {
         for (Question question : gameQuestionsInUse) {
             Collections.shuffle(question.getAnswerList());
             clearCmd();
@@ -217,9 +229,9 @@ public class Game {
     }
 
     void runGame() throws IOException, InterruptedException {
-        boolean gameOn = askGuest();
+        boolean gameOn = startMenuAndAskGuest();
         while (gameOn) {
-            playGame();
+            setNewGame();
             gameOn = askForNewGame();
         }
     }
